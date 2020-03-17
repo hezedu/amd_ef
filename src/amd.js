@@ -91,7 +91,7 @@ function loadJS(k, cb){
   dom.onerror = cb;
   document.head.appendChild(dom);
 }
-let fuckEsModuleKey = '__esModule';
+
 function define(arr, cb){
   if(typeof arr === 'function'){
     cb = arr;
@@ -102,17 +102,7 @@ function define(arr, cb){
   var script = document.currentScript;
   var k = script.dataset['amdkey'];
   let m = cb();
-  
-  
-  if(m[fuckEsModuleKey]){
-    let keys = Object.keys(m);
-    if(keys.length === 1){
-      let key = keys[0];
-      m = m[key];
-    }
-  }
   map[k].result = m;
-  
 }
 
 define.amd = true;
