@@ -1,6 +1,6 @@
 {
   "name": "@hezedu/amd",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "index.js",
   "keywords": [
     "amd",
@@ -8,7 +8,8 @@
     "simple"
   ],
   "scripts": {
-    "min": "terser  ./src/amd.js -o ./dist/amd.min.js --compress --mangle"
+    "min": "terser  ./src/amd.js -o ./dist/amd.min.js --compress --mangle",
+    "p": "npm publish --access public"
   },
   "files": [
     "index.js",
@@ -18,16 +19,17 @@
     "type": "git",
     "url": "https://github.com/hezedu/amd.git"
   },
-
   "author": {
     "name": "hezedu"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "license": "MIT",
   "email": "hezedu@hotmail.com",
   "description": "virgin",
   "bugs": {
     "url": "https://github.com/hezedu/amd/issues"
+  },
+  "devDependencies": {
+    "terser": "^4.8.0"
   }
 }

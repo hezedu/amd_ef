@@ -24,6 +24,7 @@ function amdRequire(arr, success, errorCb){
         v.isCSS = true;
         loadCSS(v.url, (err) => {
           if(err){
+            v.error = err;
             done(err);
             return;
           }
@@ -33,6 +34,7 @@ function amdRequire(arr, success, errorCb){
       } else {
         loadJS(k, (err) => {
           if(err){
+            v.error = err;
             done(err);
             return;
           }
@@ -48,7 +50,11 @@ function amdRequire(arr, success, errorCb){
     }
     if(error){
       isDone = true;
-      errorCb(error);
+      if(errorCb){
+        errorCb(error);
+      } else {
+        throw error;
+      }
       return;
     }
     count = count + 1;
@@ -119,6 +125,13 @@ window.require.setMap = function(obj){
       }
     }
   })
+}
+window.require.isSuccessed = function(key){
+  var obj = map[key];
+  if(obj){
+    return obj.successed === true;
+  }
+  return false;
 }
 
 })();
