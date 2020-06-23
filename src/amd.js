@@ -113,9 +113,7 @@ function define(arr, cb){
 
 define.amd = true;
 
-window.define = define;
-window.require = amdRequire;
-window.require.setMap = function(obj){
+function setMap(obj){
   Object.keys(obj).forEach(k => {
     if(!map[k]){
       map[k] = {
@@ -126,12 +124,16 @@ window.require.setMap = function(obj){
     }
   })
 }
-window.require.isSuccessed = function(key){
+function isSuccessed(key){
   var obj = map[key];
   if(obj){
     return obj.successed === true;
   }
   return false;
 }
-
+Object.defineProperty(window, 'define', {enumerable: true, value: define, writable: false});
+Object.defineProperty(window, 'require', {enumerable: true, value: amdRequire, writable: false});
+Object.defineProperty(amdRequire, 'setMap', {enumerable: true, value: setMap, writable: false});
+Object.defineProperty(amdRequire, 'isSuccessed', {enumerable: true, value: isSuccessed, writable: false});
+Object.defineProperty(define, 'amd', {enumerable: true, value: true, writable: false});
 })();
