@@ -16,19 +16,18 @@ function amdRequire(arr, success, errorCb){
   let isDone = false;
   arr.forEach(k => {
     const v = map[k];
-    if(v.successed){
+    if(v.loaded){
       done();
     } else {
       let suffix = _getSuffix(v.url);
       if(suffix === 'css'){
         v.isCSS = true;
-        loadCSS(v.url, (err) => {
+        loadCSS(v,  (err) => {
           if(err){
             v.error = err;
             done(err);
             return;
           }
-          v.successed = true;
           done();
         });
       } else {
@@ -38,7 +37,6 @@ function amdRequire(arr, success, errorCb){
             done(err);
             return;
           }
-          v.successed = true;
           done();
         })
       }
@@ -71,30 +69,57 @@ function amdRequire(arr, success, errorCb){
 
 // https://www.filamentgroup.com/lab/load-css-simpler/
 // <link rel="stylesheet" href="/path/to/my.css" media="print" onload="this.media='all'">
-function loadCSS(path, cb){
-   const dom = document.createElement('link');
-   dom.rel = 'stylesheet';
-   dom.media = 'print';
-   dom.href = path;
-
-   dom.onload = function(){
-    this.media = 'all';
-    cb(null);
+function loadCSS(v, cb){
+   const path = v.path;
+   let dom = v.dom;
+   if(!dom){
+     dom = v.dom = document.createElement('link');
+     dom.rel = 'stylesheet';
+     dom.media = 'print';
+     dom.href = path;
    }
-   dom.onerror = cb;
+   dom.addEventListener('onload', function(){
+    if(v.dom){
+      delete(v.dom);
+      this.media = 'all';
+      v.loaded = true;
+     }
+    cb(null);
+   });
+   dom.addEventListener('error', function(e){
+     if(v.dom){
+      delete(v.dom);
+      document.head.removeChild(dom);
+     }
+    cb(e);
+   });
 
    document.head.appendChild(dom);
 }
 
 function loadJS(k, cb){
   const v = map[k];
-  const dom = document.createElement('script');
-  dom.src = v.url;
-  dom.dataset['amdkey'] = k;
-  dom.onload = function(){
-   cb(null);
+  let dom = v.dom;
+  if(!dom){
+    dom = v.dom = document.createElement('script');
+    dom.src = v.url;
+    dom.dataset['amdkey'] = k;
   }
-  dom.onerror = cb;
+
+  dom.addEventListener('load', function(){
+    if(v.dom){
+      delete(v.dom);
+      v.loaded = true;
+     }
+    cb(null);
+  });
+  dom.addEventListener('error', function(e){
+    if(v.dom){
+      delete(v.dom);
+      document.head.removeChild(dom);
+     }
+     cb(e);
+  });
   document.head.appendChild(dom);
 }
 
@@ -118,22 +143,24 @@ function setMap(obj){
     if(!map[k]){
       map[k] = {
         url: obj[k],
-        successed: false,
+        loaded: false,
         result: true
       }
     }
   })
 }
-function isSuccessed(key){
+
+function isLoaded(key){
   var obj = map[key];
   if(obj){
-    return obj.successed === true;
+    return obj.loaded === true;
   }
   return false;
 }
+
 Object.defineProperty(window, 'define', {enumerable: true, value: define, writable: false});
 Object.defineProperty(window, 'require', {enumerable: true, value: amdRequire, writable: false});
 Object.defineProperty(amdRequire, 'setMap', {enumerable: true, value: setMap, writable: false});
-Object.defineProperty(amdRequire, 'isSuccessed', {enumerable: true, value: isSuccessed, writable: false});
+Object.defineProperty(amdRequire, 'isLoaded', {enumerable: true, value: isLoaded, writable: false});
 Object.defineProperty(define, 'amd', {enumerable: true, value: true, writable: false});
 })();
