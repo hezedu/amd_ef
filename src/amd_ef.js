@@ -1,5 +1,7 @@
 (function() {
-  
+if(!document.currentScript){
+  throw new Error('[ame_ef]: not have document.currentScript.');
+}
 const map = Object.create(null);
 
 function _getSuffix(str){
@@ -10,7 +12,7 @@ function _getSuffix(str){
   return '';
 }
 
-function amdRequire(arr, success, errorCb){
+function amdRequire(arr, callback){
   let len = arr.length;
   let count = 0;
   let isDone = false;
@@ -48,11 +50,7 @@ function amdRequire(arr, success, errorCb){
     }
     if(error){
       isDone = true;
-      if(errorCb){
-        errorCb(error);
-      } else {
-        throw error;
-      }
+      callback(err);
       return;
     }
     count = count + 1;
@@ -61,7 +59,7 @@ function amdRequire(arr, success, errorCb){
       arr.forEach(k => {
         result.push(map[k].result);
       })
-      success.apply(null, result);
+      callback(null, result);
     }
   }
 
@@ -163,4 +161,5 @@ Object.defineProperty(window, 'require', {enumerable: true, value: amdRequire, w
 Object.defineProperty(amdRequire, 'setMap', {enumerable: true, value: setMap, writable: false});
 Object.defineProperty(amdRequire, 'isLoaded', {enumerable: true, value: isLoaded, writable: false});
 Object.defineProperty(define, 'amd', {enumerable: true, value: true, writable: false});
+Object.defineProperty(define, 'EF', {enumerable: true, value: true, writable: false});
 })();
