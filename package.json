@@ -1,6 +1,6 @@
 {
   "name": "amd_ef",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "index.js",
   
   "description": "Instead of AMD and error first",
@@ -13,7 +13,7 @@
     "simple"
   ],
   "scripts": {
-    "min": "terser  ./src/amd_ef.js -o ./dist/amd_ef.min.js --compress --mangle"
+    "min": "terser  ./dist/amd_ef.js -o ./dist/amd_ef.min.js --compress --mangle"
   },
   "files": [
     "index.js",
