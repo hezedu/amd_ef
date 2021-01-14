@@ -1,8 +1,7 @@
 {
   "name": "amd_ef",
-  "version": "1.0.4",
+  "version": "2.0.0",
   "main": "index.js",
-  
   "description": "Instead of AMD and error first",
   "keywords": [
     "amd",
