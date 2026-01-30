@@ -72,24 +72,32 @@
      if(!dom){
        dom = v.dom = document.createElement('link');
        dom.rel = 'stylesheet';
-       dom.media = 'print';
+       // dom.media = 'print'; // 坑，改变 media 会重复加载
        dom.href = v.url;
      }
-     dom.addEventListener('load', function(){
-      if(v.dom){
-        delete(v.dom);
-        this.media = 'all';
-        v.loaded = true;
-       }
-      cb(null);
-     });
-     dom.addEventListener('error', function(e){
+      function _handleLoad(){
+        _end();
+        if(v.dom){
+          delete(v.dom);
+          // this.media = 'all';
+          v.loaded = true;
+        }
+        cb(null);
+     }
+     function _handleErr(e){
+      _end();
        if(v.dom){
         delete(v.dom);
         document.head.removeChild(dom);
        }
       cb(e);
-     });
+     }
+     function _end(){
+      dom.removeEventListener('load', _handleLoad);
+      dom.removeEventListener('error', _handleErr);
+     }
+     dom.addEventListener('load', _handleLoad);
+     dom.addEventListener('error', _handleErr);
   
      document.head.appendChild(dom);
   }
@@ -102,21 +110,31 @@
       dom.src = v.url;
       dom.dataset['amdkey'] = k;
     }
-  
-    dom.addEventListener('load', function(){
+    function _handleLoad(){
+      _end();
       if(v.dom){
         delete(v.dom);
         v.loaded = true;
        }
       cb(null);
-    });
-    dom.addEventListener('error', function(e){
+    }
+    
+
+    function _handleErr(e){
+      _end();
       if(v.dom){
         delete(v.dom);
         document.head.removeChild(dom);
        }
        cb(e);
-    });
+    }
+    dom.addEventListener('load', _handleLoad);
+    dom.addEventListener('error', _handleErr);
+
+    function _end(){
+      dom.removeEventListener('load', _handleLoad);
+      dom.removeEventListener('error', _handleErr);
+    }
     document.head.appendChild(dom);
   }
   
