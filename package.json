@@ -1,6 +1,6 @@
 {
   "name": "amd_ef",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "main": "index.js",
   "description": "Instead of AMD and error first",
   "keywords": [
@@ -12,7 +12,8 @@
     "simple"
   ],
   "scripts": {
-    "min": "terser  ./dist/amd_ef.js -o ./dist/amd_ef.min.js --compress --mangle"
+    "publish": "terser  ./dist/amd_ef.js -o ./dist/amd_ef.min.js --compress --mangle",
+    "p": "npm publish"
   },
   "files": [
     "index.js",
@@ -20,18 +21,17 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/hezedu/amd.git"
+    "url": "git+https://github.com/hezedu/amd.git"
   },
   "author": {
     "name": "hezedu"
   },
-  "dependencies": {},
   "license": "MIT",
   "email": "hezedu@hotmail.com",
   "bugs": {
     "url": "https://github.com/hezedu/amd/issues"
   },
   "devDependencies": {
-    "terser": "^4.8.0"
+    "terser": "^5.46.0"
   }
 }
