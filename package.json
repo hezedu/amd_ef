@@ -12,8 +12,7 @@
     "simple"
   ],
   "scripts": {
-    "publish": "terser  ./dist/amd_ef.js -o ./dist/amd_ef.min.js --compress --mangle",
-    "p": "npm publish"
+    "min": "terser  ./dist/amd_ef.js -o ./dist/amd_ef.min.js --compress --mangle"
   },
   "files": [
     "index.js",
